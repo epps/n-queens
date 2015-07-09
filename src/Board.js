@@ -1,6 +1,6 @@
 // This file is a Backbone Model Don't worry about what that means,
 // or the initialize method.  It's part of the Board Visualizer.
-// 
+//
 // Look over the other methods and write the helper functions futher
 // down in the file.
 
@@ -67,8 +67,8 @@
 
     hasAnyQueensConflicts: function() {
       return this.hasAnyRooksConflicts() || this.hasAnyMajorDiagonalConflicts() || this.hasAnyMinorDiagonalConflicts();
-    },  
-    
+    },
+
     //
     // The four method below are used by the visualizer.  You might check out how
     // togglePiece() works, but don't worry about the other method.
@@ -117,12 +117,36 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      // initialize a variable to the board size
+      var boardSize = this.n();
+      // initialize a count variable
+      var count = 0;
+      // loop through each row
+      for (var i = 0; i < boardSize; i++) {
+        // if a position holds a piece
+        if (this.getPiece(rowIndex, i)) {
+          // increment the counter
+          count++;
+        }
+      }
+      // return true if counter is greater than one
+      return count > 1;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      // initialize a variable to the board size
+      var boardSize = this.n();
+      // loop through all the rows
+      for (var i = 0; i < boardSize; i++) {
+        // invoke hasRowConflictAt() for each row
+        if (this.hasRowConflictAt(i)) {
+          // if any conflicts exists, return true
+          return true;
+        }
+      }
+      // otherwise, return false
+      return false;
     },
 
 
@@ -131,12 +155,36 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      // initialize a variable to the board size
+      var boardSize = this.n();
+      // initialize a count variable
+      var count = 0;
+      // loop through each column
+      for (var i = 0; i < boardSize; i++) {
+        // if a position holds a piece
+        if (this.getPiece(i, colIndex)) {
+          // increment the counter
+          count++;
+        }
+      }
+      // return true if counter is greater than one
+      return count > 1;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      // initialize a variable to the board size
+      var boardSize = this.n();
+      // loop through all the rows
+      for (var i = 0; i < boardSize; i++) {
+        // invoke hasColConflictAt() for each row
+        if (this.hasColConflictAt(i)) {
+          // if any conflicts exists, return true
+          return true;
+        }
+      }
+      // otherwise, return false
+      return false;
     },
 
 
@@ -145,12 +193,38 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      var boardSize = this.n(),
+          count = 0,
+          x = majorDiagonalColumnIndexAtFirstRow;
+
+      // loop over the boardSize
+      for (var y = 0; y < boardSize; y++) {
+        // if current position holds a piece
+        if (this.getPiece(y, x)) {
+          // increment x
+          x++;
+          // increment counter
+          count++;
+        }
+      }
+      // return true if counter > 1
+      return count > 1;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+      var boardSize = this.n();
+      var lastBoardIdx = (boardSize -1);
+      // loop through each column
+      for (var x = -lastBoardIdx; x < lastBoardIdx; x++) {
+        // check if hasMajorDiagonalConflictAt has a conflict
+        if (this.hasMajorDiagonalConflictAt(x)) {
+          // return true
+          return true;
+        }
+      }
+      // otherwise, return false
+      return false;
     },
 
 
@@ -159,12 +233,41 @@
     //
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+      // initialize variables for boardSize and count
+      var boardSize = this.n();
+      var count = 0;
+      var x = minorDiagonalColumnIndexAtFirstRow;
+
+      // loop over the board, setting i to the last column index
+      for (var y = 0; y < boardSize; y++) {
+        // if a piece exists at the current position
+        if (this.getPiece(y, x)) {
+          // increment the count
+          count++;
+        // decrement the colIndex (i.e. x)
+          x--;
+        }
+      }
+      // return true if counter is greater than 1
+      return count > 1;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+      // initialize boardSize
+      var boardSize = this.n();
+
+      // loop through each row
+      for (var x = 0; x < ((boardSize - 1)*2); x++) {
+        // if has hasMinorDiagonalConflictAt in current row
+        if (this.hasMinorDiagonalConflictAt(x)) {
+          // return true
+          return true;
+        }
+      }
+
+      // return false
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
