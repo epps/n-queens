@@ -29,59 +29,42 @@
 // Termination case: when loop inside of recursive function reaches n iterations
 
 window.findNRooksSolution = function(n) {
-  // initialize empty array
+  // create solutions collection
   var solutions = [];
-  // create a working board
+  // make new board
   var board = new Board({n: n});
-  // initialize a count
-  var rooksPlaced = 0;
-  // initialize index variables for y and x coordinates
-  var rowIndex = 0;
-  var colIndex = 0;
-  // initialize a starting value
-  var val = 1;
+  // count Rooks placed
+  var numRooks = 0;
+  // define recursive function
+  var recursiveRooks = function(rowNum) {
+    // initializa a count
+    var rowNum = rowNum || 0;
 
-  // define a recursive function
-  var recursiveRooks = function(board, rowIndex, colIndex, val) {
-    // reset colIndex when it reaches n
-    if (colIndex === n) {
-      colIndex = 0;
+    // base case: has counter exceeded n
+    if (numRooks === n) {
+      solutions = board.allRows();
+      return;
     }
 
-    // handle termination case
-    if (rowIndex === n || rooksPlaced === n) {
-      // push successful board to solutions array
-      solutions.push(board);
-      // generate a new board
-      board = new Board({n:n});
-      // how to handle new values?
-
-      // recurse with new board
-      recursiveRooks(board, rowIndex, colIndex, val);
+    // loop over indeces
+    for (var colNum = 0; colNum < n; colNum++) {
+      // place piece at position x,y (i.e count, i)
+      board.setPiece(rowNum, colNum, 1);
+      // check for conflict
+      if (!board.hasAnyRooksConflicts()) {
+        // increment rowNum and recurse
+        numRooks++;
+        console.log(board.allRows());
+        recursiveRooks(rowNum+1);
+      }
+      else {
+        board.setPiece(rowNum, colNum, 0);
+      }
     }
-
-    // set a piece on the board
-    board.setPiece(rowIndex, colIndex, val);
-    // if new piece placement has any conflicts
-    if (!board.hasAnyRooksConflicts()) {
-      // increment rooksPlaced
-      rooksPlaced++;
-      // increment colIndex
-      colIndex++;
-      // recurse with new position
-      recursiveRooks(board, rowIndex, colIndex, val);
-    }
-
-    // if new pieve placement has conflicts
-    if (board.hasAnyRooksConflicts()) {
-      // change the value to 0
-      val = 0;
-      // recurse with same position
-      recursiveRooks(board, rowIndex, colIndex, val);
-    }
-
-    //
   };
+
+  // invoke recursive function
+  recursiveRooks(0);
 
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solutions));
   // return array of solutions
